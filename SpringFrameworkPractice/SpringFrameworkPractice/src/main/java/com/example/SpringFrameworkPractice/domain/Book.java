@@ -2,6 +2,7 @@ package com.example.SpringFrameworkPractice.domain;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,18 +15,22 @@ public class Book {
     private String title;
     private String isbn;
 
-    @ManyToMany(mappedBy = "authors")
-    private Set<Author> authors;
+    @ManyToOne
+    private Publisher publisher;
+
+    @ManyToMany
+    @JoinTable (name= "author_book", joinColumns = @JoinColumn(name = "book_id"),inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<Author> authors = new HashSet<>();
 
     //no arg constructor
     public Book() {
     }
 
     //all args constructor
-    public Book(String title, String isbn, Set<Author> authors) {
+    public Book(String title, String isbn) {
         this.title = title;
         this.isbn = isbn;
-        this.authors = authors;
+
     }
 
     //accessors and mutators
@@ -62,7 +67,15 @@ public class Book {
         this.authors = authors;
     }
 
-    //toString method
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
+    }
+//toString method
 
     @Override
     public String toString() {
@@ -70,7 +83,6 @@ public class Book {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", isbn='" + isbn + '\'' +
-                ", authors=" + authors +
                 '}';
     }
 
